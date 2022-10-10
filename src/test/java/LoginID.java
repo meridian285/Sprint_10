@@ -4,6 +4,11 @@ public class LoginID {
     public LoginID(int id) {
         this.id = id;
     }
+
+    public LoginID() {
+
+    }
+
     public int getId() {
         return id;
     }
