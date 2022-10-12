@@ -13,7 +13,7 @@ public class LoginCourierTests {
     public void setUp() {
         RestAssured.baseURI = "https://qa-scooter.praktikum-services.ru";
     }
-    CourierClass courierClass = new CourierClass("qwerqwrqwr1", "1234","adsgrsrtg");
+    CourierData courierClass = new CourierData("qwerqwrqwr1", "1234","adsgrsrtg");
 
     @Test
     public void loginCourierWithValidCredentials(){

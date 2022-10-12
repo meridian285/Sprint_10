@@ -1,19 +1,15 @@
 public class LoginID {
-    private int id;
+    private Integer id;
 
-    public LoginID(int id) {
+    public LoginID(Integer id) {
         this.id = id;
     }
 
-    public LoginID() {
-
-    }
-
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 }

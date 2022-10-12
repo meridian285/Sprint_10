@@ -1,4 +1,3 @@
-import com.google.gson.Gson;
 import lombok.*;
 
 @Getter
@@ -6,7 +5,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class CourierClass {
+public class CourierData {
     private String login;
     private String password;
     private String firstName;

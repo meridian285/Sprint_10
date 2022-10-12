@@ -1,75 +1,61 @@
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import io.restassured.response.ValidatableResponse;
-import io.restassured.specification.RequestSpecification;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-
 import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.responseSpecification;
 import static org.hamcrest.Matchers.*;
 
 public class CreateCourierTests {
-    private static final String basePath = "/api/v1/";
-    ValidatableResponse
+    private final static String URL = "https://qa-scooter.praktikum-services.ru";
+
     @Before
     public void setUp() {
         RestAssured.baseURI = "https://qa-scooter.praktikum-services.ru";
-        RestAssured.basePath = basePath;
+
     }
+
     @Test
-    public void test(){
-        CourierClass courierClass = new CourierClass("qwerqwrqwr1", "1234","adsgrsrtg");
+    public void checkCreateLoginCourierValidCredentials2(){
+        Specifications.installSpec(Specifications.reqSpec(URL),Specifications.respSpec(201));
+        CourierData courierData = new CourierData("qwerqwrqwr1", "1234","adsgrsrtg");
+        Requests requests = new Requests();
+        requests.createCourier(courierData);
+    }
+
+    @Test
+    public void checkCreateLoginCourierValidCredentials(){
+
+        CourierData courierClass = new CourierData("qwerqwrqwr1", "1234","adsgrsrtg");
         Response response =
                 given()
                         .header("Content-type", "application/json")
                         .body(courierClass)
-                        .when()
-                        .post("/api/v1/courier");
+                        .post(EndPoints.courier);
         response.then().assertThat()
-                .and()
-                .statusCode(201)
-                .body("ok", equalTo(true));
-        System.out.println(response.statusCode());
-        System.out.println(response.body().asString());
-    }
-
-    @Test
-    public void createLoginCourierValidCredentials(){
-
-        CourierClass courierClass = new CourierClass("qwerqwrqwr1", "1234","adsgrsrtg");
-        Response response =
-                given()
-                        .header("Content-type", "application/json")
-                        .body(courierClass)
-                        .when()
-                        .post("/api/v1/courier");
-        response.then().assertThat()
-                .and()
                 .statusCode(201)
                 .body("ok", equalTo(true));
         //выполняем логин для получения ID
         LoginID loginID = given()
                         .header("Content-type", "application/json")
                         .body(courierClass)
-                        .when()
                         .post(EndPoints.login)
-                        .body()
                         .as(LoginID.class);
         //удаляем логин по ID
                 given()
                         .header("Content-type", "application/json")
                         .body(courierClass)
-                        .when()
-                        .delete(EndPoints.courier+loginID.getId());
+                        .delete(EndPoints.delete+loginID.getId());
 
-        System.out.println(EndPoints.courier+loginID.getId());
+        System.out.println();
+        System.out.println(EndPoints.delete+loginID.getId());
     }
 
     @Test
-    public void createLoginCourierValidCredentials1(){
-        CourierClass courierClass = new CourierClass("qwerqwrqwr2", "1234","adsgrsrtg");
+    public void checkCreateLoginCourierValidCredentials1(){
+        CourierData courierClass = new CourierData("qwerqwrqwr2", "1234","adsgrsrtg");
                 given()
                         .header("Content-type", "application/json")
                         .body(courierClass)
@@ -86,9 +72,5 @@ public class CreateCourierTests {
                 .statusCode(409)
                 .body("message", equalTo("Этот логин уже используется"));
 
-
-
-//        System.out.println(response.body().asString());
-//        System.out.println(response.statusCode());
     }
 }
