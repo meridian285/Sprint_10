@@ -2,35 +2,39 @@ package ru.yandex.practikum.steps;
 
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import io.restassured.response.ValidatableResponse;
 import ru.yandex.practikum.dataTests.CourierData;
 import ru.yandex.practikum.dataTests.EndPoints;
 import ru.yandex.practikum.dataTests.LoginID;
 import ru.yandex.practikum.dataTests.LoginRequest;
 import static io.restassured.RestAssured.given;
-import static ru.yandex.practikum.config.Config.getBaseUri;
-import static ru.yandex.practikum.generator.CourierDataGenerator.getRandomCourierRequest;
+
+
 
 public class CourierSteps extends RestClient {
     //create
-    public Response create(CourierData courierData) {
+    public ValidatableResponse create(CourierData courierData) {
         return given()
                 .spec(getDefaultRequestSpec())
                 .body(courierData)
-                .post(EndPoints.COURIER);
+                .post(EndPoints.COURIER)
+                .then();
     }
 
     //login
-    public Response login(LoginRequest loginRequest) {
+    public ValidatableResponse login(LoginRequest loginRequest) {
         return given()
                 .spec(getDefaultRequestSpec())
                 .body(loginRequest)
-                .post(EndPoints.COURIER);
+                .post(EndPoints.LOGIN)
+                .then();
     }
         //delete
-        public Response delete(LoginID loginID) {
+        public ValidatableResponse delete(Integer id) {
             return given()
                     .spec(getDefaultRequestSpec())
-                    .body(loginID)
-                    .post(EndPoints.DELETE);
+                    .body(id)
+                    .post(EndPoints.DELETE)
+                    .then();
         }
     }
