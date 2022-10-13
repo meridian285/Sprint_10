@@ -1,3 +1,5 @@
+package ru.yandex.practikum.dataTests;
+
 public class LoginID {
     private Integer id;
 

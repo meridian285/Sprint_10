@@ -1,76 +1,75 @@
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.junit.Assert;
+import io.restassured.response.ValidatableResponse;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import ru.yandex.practikum.dataTests.CourierData;
+import ru.yandex.practikum.dataTests.EndPoints;
+import ru.yandex.practikum.dataTests.LoginID;
+import ru.yandex.practikum.dataTests.LoginRequest;
+import ru.yandex.practikum.steps.CourierSteps;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.responseSpecification;
 import static org.hamcrest.Matchers.*;
+import static ru.yandex.practikum.config.Config.getBaseUri;
 
 public class CreateCourierTests {
-    private final static String URL = "https://qa-scooter.praktikum-services.ru";
 
+    private CourierSteps courierSteps;
     @Before
-    public void setUp() {
-        RestAssured.baseURI = "https://qa-scooter.praktikum-services.ru";
-
-    }
-
-    @Test
-    public void checkCreateLoginCourierValidCredentials2(){
-        Specifications.installSpec(Specifications.reqSpec(URL),Specifications.respSpec(201));
-        CourierData courierData = new CourierData("qwerqwrqwr1", "1234","adsgrsrtg");
-        Requests requests = new Requests();
-        requests.createCourier(courierData);
+    public void setUp(){
+        courierSteps = new CourierSteps();
     }
 
     @Test
     public void checkCreateLoginCourierValidCredentials(){
+        CourierData courierData = new CourierData();
+        Response response = courierSteps.create(courierData);
+        response.then().extract().statusCode();
+        response.then().extract().path("ok");
 
-        CourierData courierClass = new CourierData("qwerqwrqwr1", "1234","adsgrsrtg");
-        Response response =
-                given()
-                        .header("Content-type", "application/json")
-                        .body(courierClass)
-                        .post(EndPoints.courier);
-        response.then().assertThat()
-                .statusCode(201)
-                .body("ok", equalTo(true));
-        //выполняем логин для получения ID
-        LoginID loginID = given()
-                        .header("Content-type", "application/json")
-                        .body(courierClass)
-                        .post(EndPoints.login)
-                        .as(LoginID.class);
-        //удаляем логин по ID
-                given()
-                        .header("Content-type", "application/json")
-                        .body(courierClass)
-                        .delete(EndPoints.delete+loginID.getId());
-
-        System.out.println();
-        System.out.println(EndPoints.delete+loginID.getId());
     }
+
 
     @Test
-    public void checkCreateLoginCourierValidCredentials1(){
-        CourierData courierClass = new CourierData("qwerqwrqwr2", "1234","adsgrsrtg");
-                given()
-                        .header("Content-type", "application/json")
-                        .body(courierClass)
-                        .when()
-                        .post("/api/v1/courier");
-        Response response =
-                given()
-                        .header("Content-type", "application/json")
-                        .body(courierClass)
-                        .when()
-                        .post("/api/v1/courier");
-        response.then().assertThat()
-                .and()
-                .statusCode(409)
-                .body("message", equalTo("Этот логин уже используется"));
+    public void checkCreateLoginCourierValidCredentials3(){
 
+        CourierData courierData = new CourierData();
+        Response response = courierSteps.create(courierData);
+        response.then().extract().statusCode();
+        response.then().extract().path("ok");
+
+
+//        //выполняем логин для получения ID
+//        LoginRequest loginRequest = new LoginRequest();
+//        Response responseLogin = courierSteps.login(loginRequest);
+//        responseLogin.then().extract().statusCode();
+//        responseLogin.then().extract().path("ok");
+//
+//        //удаляем логин по ID
+//        LoginID loginID = new LoginID();
+//        Response responseDelete = courierSteps.delete(loginID);
+//        responseDelete.then().extract().path("ok");
     }
+
+//    @Test
+//    public void checkCreateLoginCourierValidCredentials1(){
+//        CourierData courierClass = new CourierData("qwerqwrqwr2", "1234","adsgrsrtg");
+//                given()
+//                        .header("Content-type", "application/json")
+//                        .body(courierClass)
+//                        .when()
+//                        .post("/api/v1/courier");
+//        Response response =
+//                given()
+//                        .header("Content-type", "application/json")
+//                        .body(courierClass)
+//                        .when()
+//                        .post("/api/v1/courier");
+//        response.then().assertThat()
+//                .and()
+//                .statusCode(409)
+//                .body("message", equalTo("Этот логин уже используется"));
+//
+//    }
 }
