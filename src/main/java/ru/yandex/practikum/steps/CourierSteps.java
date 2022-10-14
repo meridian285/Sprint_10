@@ -1,17 +1,12 @@
 package ru.yandex.practikum.steps;
-
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import ru.yandex.practikum.dataTests.CourierData;
 import ru.yandex.practikum.dataTests.EndPoints;
-import ru.yandex.practikum.dataTests.LoginID;
 import ru.yandex.practikum.dataTests.LoginRequest;
 import static io.restassured.RestAssured.given;
 
-
-
 public class CourierSteps extends RestClient {
+
     //create
     public ValidatableResponse create(CourierData courierData) {
         return given()
@@ -20,7 +15,6 @@ public class CourierSteps extends RestClient {
                 .post(EndPoints.COURIER)
                 .then();
     }
-
     //login
     public ValidatableResponse login(LoginRequest loginRequest) {
         return given()
@@ -30,11 +24,10 @@ public class CourierSteps extends RestClient {
                 .then();
     }
         //delete
-        public ValidatableResponse delete(Integer id) {
+        public ValidatableResponse delete(int id) {
             return given()
                     .spec(getDefaultRequestSpec())
-                    .body(id)
-                    .post(EndPoints.DELETE)
+                    .delete(EndPoints.DELETE+id)
                     .then();
         }
-    }
+}
